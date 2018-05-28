@@ -61,7 +61,7 @@ public:
 
                     std::string msg = "|CFF";
                     msg += tag_colour;
-                    msg += "[ANUNCIO DE BOSS]|r:|cff";
+                    msg += "[IMAGEN AQUI!]|r:|cff";
                     msg += plr_colour;
                     if (isGuildParty)
                     {
