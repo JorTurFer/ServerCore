@@ -13398,10 +13398,31 @@ uint32 Unit::GetModelForForm(ShapeshiftForm form, uint32 spellId) const
                     return 29405;
                 }
             }
-            if (getRace() == RACE_HUARGUEN_WOLF)
+            else if (getRace() == RACE_HORDE_NIGHT_ELF)
             {
-                uint8 hairColor = GetByteValue(PLAYER_BYTES, 3);
+                uint8 hairColor = GetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_HAIR_COLOR_ID);
                 switch (hairColor)
+                {
+                case 7: // Violet
+                case 8:
+                    return 29405;
+                case 3: // Light Blue
+                    return 29406;
+                case 0: // Green
+                case 1: // Light Green
+                case 2: // Dark Green
+                    return 29407;
+                case 4: // White
+                    return 29408;
+                default: // original - Dark Blue
+                   // return 892;
+                    return 29405;
+                }
+            }
+            else if (getRace() == RACE_HUARGUEN_WOLF)
+            {
+                uint8 skinColor = GetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_SKIN_ID);
+                switch (skinColor)
                 {
                 case 0: // Violet
                     return 1057; // 16245 - 1.14999997615814
@@ -13414,7 +13435,7 @@ uint32 Unit::GetModelForForm(ShapeshiftForm form, uint32 spellId) const
                     return 892;
                 }
             }
-            if (getRace() == RACE_TROLL)
+            else if (getRace() == RACE_TROLL)
             {
                 uint8 hairColor = GetByteValue(PLAYER_BYTES, 3);
                 switch (hairColor)
@@ -13514,9 +13535,27 @@ uint32 Unit::GetModelForForm(ShapeshiftForm form, uint32 spellId) const
                     return 29414;
                 }
             }
-            if (getRace() == RACE_HUARGUEN_WOLF)
+            else if (getRace() == RACE_HORDE_NIGHT_ELF)
             {
-                uint8 hairColor = GetByteValue(PLAYER_BYTES, 3);
+                uint8 hairColor = GetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_HAIR_COLOR_ID);
+                switch (hairColor)
+                {
+                case 0: // Green
+                case 1: // Light Green
+                case 2: // Dark Green
+                    return 29413; // 29415?
+                case 6: // Dark Blue
+                case 4: // White
+                    return 29416;
+                case 3: // Light Blue
+                    return 29417;
+                default: // original - Violet
+                    return 29414;
+                }
+            }
+            else if (getRace() == RACE_HUARGUEN_WOLF)
+            {
+                uint8 skinColor = GetByteValue(PLAYER_BYTES, PLAYER_BYTES_OFFSET_SKIN_ID);
                 switch (hairColor)
                 {
                 case 0: // Violet
@@ -13530,7 +13569,7 @@ uint32 Unit::GetModelForForm(ShapeshiftForm form, uint32 spellId) const
                     return 2281;
                 }
             }
-            if (getRace() == RACE_TROLL)
+            else if (getRace() == RACE_TROLL)
             {
                 uint8 hairColor = GetByteValue(PLAYER_BYTES, 3);
                 switch (hairColor)
