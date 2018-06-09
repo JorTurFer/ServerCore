@@ -16,10 +16,10 @@ public:
 
     void DoWork(Player* player)
     {
-        //Si no equitacion nada
+        // Si no equitacion nada
         if (!player->HasSkill(762) || player->GetSkillValue(762) < 70)
             return;
-        //Si es Huargen???????
+        // Si es Huargen???????
         if (player->getRace() == 16)
             player->CastSpell(player, 68996, true, NULL, NULL, player->GetGUID());
 
@@ -43,14 +43,14 @@ public:
             if (Spell_Row.m_SpellType == AccountSpellTypeNONE || !Spell_Row.m_learn) continue;
             if (player->HasSpell(i))continue;
 
-            //Compruebo la raza
+            // Compruebo la raza
             if (Spell_Row.m_maskRace > 0)
             {
                 if ((Spell_Row.m_maskRace & player->getRaceMask()) == 0)
                     continue;
             }
 
-            //Compruebo la clase
+            // Compruebo la clase
             if (Spell_Row.m_maskClass > 0)
             {
                 if ((Spell_Row.m_maskClass & player->getClassMask()) == 0)
@@ -70,7 +70,7 @@ public:
 
     void OnSpellLearn(Player* player, uint32 idSpell) override
     {
-        //Si el spell es equitacion
+        // Si el spell es equitacion
         if (idSpell == 33388)
             DoWork(player);
     }
