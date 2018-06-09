@@ -5,7 +5,7 @@ This code is provide as is it, and it doesn't have any support
 ## Build Status
 |Travis|AppVeyor|
 |------|--------|
-|[![Build Status](https://travis-ci.org/JorTurFer/Sirion.svg?branch=master)](https://travis-ci.org/JorTurFer/Sirion)|[![Build status](https://ci.appveyor.com/api/projects/status/7ir4airfqonn90wn?svg=true)](https://ci.appveyor.com/project/kabestrus/sirion)|
+|[![Build Status](https://travis-ci.org/JorTurFer/ServerCore.svg?branch=master)](https://travis-ci.org/JorTurFer/ServerCore)|[![Build status](https://ci.appveyor.com/api/projects/status/7ir4airfqonn90wn?svg=true)](https://ci.appveyor.com/project/kabestrus/sirion)|
 
 
 
