@@ -131,6 +131,8 @@ std::unordered_map<uint8, AuthHandler> AuthSession::InitHandlers()
 
 std::unordered_map<uint8, AuthHandler> const Handlers = AuthSession::InitHandlers();
 
+bool _bHasPatch;
+
 void AccountInfo::LoadResult(Field* fields)
 {
     //          0           1         2               3          4                5                                                             6
@@ -285,6 +287,9 @@ bool AuthSession::HandleLogonChallenge()
     sAuthLogonChallenge_C* challenge = reinterpret_cast<sAuthLogonChallenge_C*>(GetReadBuffer().GetReadPointer());
     if (challenge->size - (sizeof(sAuthLogonChallenge_C) - AUTH_LOGON_CHALLENGE_INITIAL_SIZE - 1) != challenge->I_len)
         return false;
+    
+    //Si el Wow.Exe es el modificado, tiene los parches
+    _bHasPatch = challenge->version3 == 6;
 
     std::string login((char const*)challenge->I, challenge->I_len);
     TC_LOG_DEBUG("server.authserver", "[AuthChallenge] '%s'", login.c_str());
@@ -613,6 +618,12 @@ bool AuthSession::HandleLogonProof()
             std::memcpy(packet.contents(), &proof, sizeof(proof));
         }
 
+        //Actualizo el estado de los parches en la DB
+        stmt = LoginDatabase.GetPreparedStatement(LOGIN_UPD_SET_PATCH);
+        stmt->setBool(0,_bHasPatch);
+        stmt->setUInt32(1, _accountInfo.Id);
+        LoginDatabase.DirectExecute(stmt);
+
         SendPacket(packet);
         _status = STATUS_AUTHED;
     }
@@ -687,6 +698,9 @@ bool AuthSession::HandleReconnectChallenge()
     sAuthLogonChallenge_C* challenge = reinterpret_cast<sAuthLogonChallenge_C*>(GetReadBuffer().GetReadPointer());
     if (challenge->size - (sizeof(sAuthLogonChallenge_C) - AUTH_LOGON_CHALLENGE_INITIAL_SIZE - 1) != challenge->I_len)
         return false;
+
+    //Si el Wow.Exe es el modificado, tiene los parches
+    _bHasPatch = challenge->version3 == 6;
 
     std::string login((char const*)challenge->I, challenge->I_len);
     TC_LOG_DEBUG("server.authserver", "[ReconnectChallenge] '%s'", login.c_str());
