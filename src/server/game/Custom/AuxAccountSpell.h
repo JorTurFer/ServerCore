@@ -1,5 +1,5 @@
-#ifndef AUXACCOUNTMOUNT_H
-#define AUXACCOUNTMOUNT_H
+#ifndef AUXACCOUNTSPELL_H
+#define AUXACCOUNTSPELL_H
 
 #include "ScriptMgr.h"
 #include "DatabaseEnv.h"
