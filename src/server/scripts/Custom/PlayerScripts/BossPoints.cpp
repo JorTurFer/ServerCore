@@ -3,6 +3,7 @@
 #include "Group.h"
 #include "Chat.h"
 #include "World.h"
+#include "WorldSession.h"
 
 class Boss_Point : public PlayerScript
 {
@@ -83,7 +84,7 @@ public:
                     //Compruebo que exista el miembro (este conectado) y este en el mismo mapa que quien ha matado (evitar que este fuera de la raid)
                     if (member && member->GetMap()->GetId() == player->GetMap()->GetId())
                     {
-                        member->AddVotePoints(nPuntos, false);
+                        member->GetSession()->AddVotePoints(nPuntos, false);
                         ChatHandler chat(member->GetSession());
                         chat.PSendSysMessage(msg.c_str());
                     }
@@ -102,7 +103,7 @@ public:
         {
             try
             {
-                player->AddVotePoints(nPuntos, false);
+                player->GetSession()->AddVotePoints(nPuntos, false);
                 ChatHandler chat(player->GetSession());
                 chat.PSendSysMessage(msg.c_str());
             }

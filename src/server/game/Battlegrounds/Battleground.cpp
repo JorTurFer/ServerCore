@@ -858,7 +858,7 @@ void Battleground::EndBattleground(uint32 winner)
             {
 
                 //Añado los puntos de lealtad
-                player->AddVotePoints(player->GetRandomWinner() ? sWorld->getIntConfig(CONFIG_LOYALTY_REST_BG) : sWorld->getIntConfig(CONFIG_LOYALTY_1ST_BG), false);
+                player->GetSession()->AddVotePoints(player->GetRandomWinner() ? sWorld->getIntConfig(CONFIG_LOYALTY_REST_BG) : sWorld->getIntConfig(CONFIG_LOYALTY_1ST_BG), false);
 
                 if (!player->GetRandomWinner())
                 {

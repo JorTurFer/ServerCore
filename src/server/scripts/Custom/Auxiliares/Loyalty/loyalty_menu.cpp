@@ -210,12 +210,12 @@ namespace
 		}
 
 
-		if (player->GetVotePoints() >= item.m_cost)
+		if (player->GetSession()->GetVotePoints() >= item.m_cost)
 		{
 			std::string msg;
 			if (player->SendShopItem(recompensas))
 			{
-				player->RemoveVotePoints(item.m_cost);
+				player->GetSession()->RemoveVotePoints(item.m_cost);
 				if (shop)
 					msg = "|CFFDAF7A6Tienda del juego:|r ";
 				else
@@ -288,7 +288,7 @@ bool Loyalty_Gossip::GossipSelect(Player *player, WorldObject* source, uint32 me
 
 	case GOSSIP_ADD_POINTS:
 		//La comprobacion esta en el primer menu
-		player->AddVotePoints(sWorld->getIntConfig(CONFIG_LOYALTY_NPC_POINTS), true);
+		player->GetSession()->AddVotePoints(sWorld->getIntConfig(CONFIG_LOYALTY_NPC_POINTS), true);
 		if (guid.IsCreature())
 			source->ToCreature()->Whisper("Has Marcado tu asistencia, sigue acumulando puntos", LANG_UNIVERSAL, player);
 		else if (guid.IsPlayer())
@@ -327,8 +327,8 @@ bool Loyalty_Gossip::GossipHello(Player* player, WorldObject* source)
 	ClearGossipMenuFor(player);
 	uint32 unlastVote = 0;
 	tm dateCambioVotacion;
-	uint32 votePoints = player->GetVotePoints();
-	time_t lastVote = player->GetLastVote();
+	uint32 votePoints = player->GetSession()->GetVotePoints();
+	time_t lastVote = player->GetSession()->GetLastVote();
     time_t nextVote;
 
 

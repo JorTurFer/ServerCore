@@ -4,6 +4,7 @@
 #include "DBCStores.h"
 #include "SpellAuras.h"
 #include "SpellMgr.h"
+#include "WorldSession.h"
 
 class SetAurasParches : public PlayerScript
 {
@@ -13,7 +14,7 @@ public:
     void OnLogin(Player* player, bool /*bFirstLogin*/)
     {
 		//Cambio las auras
-		if (player->HasPatchs())
+		if (player->GetSession()->HasPatch())
 		{
 			player->RemoveAura(300612);
 			player->AddAura(300611, player);

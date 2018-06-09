@@ -2137,13 +2137,8 @@ public:
 
 	uint32 DoRandomRoll(uint32 minimum, uint32 maximum);
 	double GetExpRate();
-	bool HasPatchs() { return m_parches; }
-	void SetHasPatchs() { m_parches = true; }
 	void SetExpRate(double rate);
-	uint32 GetVotePoints() { return m_votePoints; }
-	time_t GetLastVote() { return m_LastVote; }
-	void AddVotePoints(uint32 points, bool registrar);
-	void RemoveVotePoints(uint32 points);
+	
 	void SetLoyaltyLastMenuOffset(uint32 lastOffset) { m_loyaltyLastMenuOffset = lastOffset; }
 	uint32 GetLoyaltyLastMenuOffset() { return m_loyaltyLastMenuOffset; }
 
@@ -2321,8 +2316,6 @@ public:
 	bool ShowedPopUp() { return m_bShowedPopUp; }
 	void SetPopUp();
 
-	void _LoadPatch();
-
 	bool IsInTaxi() { return m_IsInTaxi; }
 
 protected:
@@ -2333,8 +2326,6 @@ protected:
 	uint32 m_contestedPvPTimer;
 
 	uint32 m_loyaltyLastMenuOffset = 0;
-	uint32 m_votePoints = 0;
-	time_t m_LastVote = time(0);
 	double m_nRate = 0;
 	uint32 m_currentNPCGossip = 0;
 	uint32 m_currentItemGossip = 0;
@@ -2343,7 +2334,6 @@ protected:
 	uint32 m_LoyaltyShop_offset = 0;
 	uint32 m_LoyaltyShop_limit = 0;
 
-	bool m_parches = false;
 	//Promocion guild
 	time_t m_timePromocionGuildDebuff = NULL;
 	bool m_AccountWithPromo = false;
@@ -2354,7 +2344,6 @@ protected:
 	void _LoadNewsRequired();
 
 	double _GetExpRate();
-	void _LoadVotePoints();
 	bool _EnviarPorCorreo(uint32 itemId, uint32 count, bool shop = false);
 	bool _EnviarPorCorreo(std::vector<RewardsMenuTemplate> itemTemplate);
 	bool _EnviarPorCorreo(Item* item);

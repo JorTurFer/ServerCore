@@ -1442,8 +1442,8 @@ namespace lfg
                 //Creo que va aqui el dar las recompensas de las ALEH
                 uint32 questALEH_ID_1st = 24788;
                 uint32 questALEH_ID_REST = 24789;
-                if (quest->GetQuestId() == questALEH_ID_1st) player->AddVotePoints(sWorld->getIntConfig(CONFIG_LOYALTY_1ST_ALEH), false);
-                else if (quest->GetQuestId() == questALEH_ID_REST) player->AddVotePoints(sWorld->getIntConfig(CONFIG_LOYALTY_REST_ALEH), false);
+                if (quest->GetQuestId() == questALEH_ID_1st) player->GetSession()->AddVotePoints(sWorld->getIntConfig(CONFIG_LOYALTY_1ST_ALEH), false);
+                else if (quest->GetQuestId() == questALEH_ID_REST) player->GetSession()->AddVotePoints(sWorld->getIntConfig(CONFIG_LOYALTY_REST_ALEH), false);
             }
             else
             {

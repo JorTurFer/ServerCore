@@ -152,7 +152,7 @@ bool TELE::IsAllowedDestine(Player * const player, uint32 categoria, uint32 posi
     }
 
     //Compruebo los parches
-    if (destino.m_parches && !player->HasPatchs()) return false;
+    if (destino.m_parches && !player->GetSession()->HasPatch()) return false;
 
     return true;
 }

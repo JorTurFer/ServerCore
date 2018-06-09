@@ -84,7 +84,7 @@ namespace nsNpcLoyalty
 		}
 
 		//Compruebo los parches
-		if (!skipPatchCheck && recompensa.m_parches && !player->HasPatchs()) return false;
+		if (!skipPatchCheck && recompensa.m_parches && !player->GetSession()->HasPatch()) return false;
 
 		return true;
 	}

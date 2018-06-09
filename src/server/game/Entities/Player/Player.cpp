@@ -440,9 +440,6 @@ Player::Player(WorldSession* session) : Unit(true)
 
     m_achievementMgr = new AchievementMgr(this);
     m_reputationMgr = new ReputationMgr(this);
-
-	//Cargo si tiene parches al construir el pj
-	_LoadPatch();
 }
 
 Player::~Player()
@@ -1236,7 +1233,7 @@ void Player::Update(uint32 p_time)
                 msg += " puntos de asistencia por tiempo en el juego y un obsequio se ha enviado a tu buzon.";
 
                 GetSession()->SendAreaTriggerMessage(msg.c_str());
-                AddVotePoints(sWorld->getIntConfig(CONFIG_PLAYER_TIMED_REWARD_LOYALTY_POINTS_AMOUNT), false);
+				GetSession()->AddVotePoints(sWorld->getIntConfig(CONFIG_PLAYER_TIMED_REWARD_LOYALTY_POINTS_AMOUNT), false);
 
                 vector<RewardsMenuTemplate> regalos;
                 RewardsMenuTemplate reg;
@@ -2096,7 +2093,6 @@ void Player::AddToWorld()
     Unit::AddToWorld();
     //Leo el rate
     m_nRate = _GetExpRate();
-    _LoadVotePoints();
     _GetPromocionGuild();
 
     for (uint8 i = PLAYER_SLOT_START; i < PLAYER_SLOT_END; ++i)
@@ -27199,68 +27195,6 @@ void Player::RemoveSocial()
 {
     sSocialMgr->RemovePlayerSocial(GetGUID());
     m_social = nullptr;
-}
-
-void Player::_LoadVotePoints()
-{
-    QueryResult result = LoginDatabase.PQuery("SELECT points,lastvote FROM voting_points WHERE id = %u", GetSession()->GetAccountId());
-    if (result)
-    {
-        Field* fields = result->Fetch();
-        m_votePoints = fields[0].GetUInt32();
-        m_LastVote = fields[1].GetUInt32();
-    }
-    else
-    {
-        m_votePoints = 0;
-        m_LastVote = 0;
-    }
-}
-
-void Player::_LoadPatch()
-{
-	QueryResult result = LoginDatabase.PQuery("SELECT parches FROM account WHERE id = %u", GetSession()->GetAccountId());
-	if (result)
-	{
-		if (result->Fetch()[0].GetBool())
-			SetHasPatchs();
-	}	
-}
-
-void Player::AddVotePoints(uint32 points, bool registrar = true)
-{
-    if (registrar)
-    {
-        time_t timenow = time(0);
-        if (m_votePoints > 0)
-        {
-            QueryResult result = LoginDatabase.PQuery("UPDATE voting_points set points = (points + %u), lastvote = %u WHERE id = %u;", points, timenow, GetSession()->GetAccountId());
-        }
-        else
-        {
-            QueryResult result = LoginDatabase.PQuery("REPLACE INTO voting_points (id,points,lastvote) value (%u,%u,%u);", GetSession()->GetAccountId(), points, timenow);
-        }
-        m_LastVote = timenow;
-    }
-    else
-    {
-        if (m_votePoints > 0)
-        {
-            QueryResult result = LoginDatabase.PQuery("UPDATE voting_points set points = (points + %u) WHERE id = %u;", points, GetSession()->GetAccountId());
-        }
-        else
-        {
-            QueryResult result = LoginDatabase.PQuery("REPLACE INTO voting_points (id,points,lastvote) value (%u,%u,1);", GetSession()->GetAccountId(), points);
-        }
-
-    }
-    m_votePoints += points;
-}
-
-void Player::RemoveVotePoints(uint32 points)
-{
-    QueryResult result = LoginDatabase.PQuery("UPDATE voting_points set points = (points - %u) WHERE id = %u;", points, GetSession()->GetAccountId());
-    m_votePoints -= points;
 }
 
 double Player::_GetExpRate()

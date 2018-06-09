@@ -2724,7 +2724,7 @@ public:
 
     static bool HandleGossipRequest(ChatHandler* handler, char const* args)
     {
-        if (handler->GetSession()->GetSecurity() == 0 && !handler->GetSession()->GetPlayer()->HasPatchs())
+        if (handler->GetSession()->GetSecurity() == 0 && !handler->GetSession()->HasPatch())
             return false;
         char* gossip = strtok((char*)args, " ");
         if (!gossip)
@@ -2742,7 +2742,7 @@ public:
 
     static bool HandleLoyaltyShopRequest(ChatHandler* handler, char const* args)
     {
-        if (handler->GetSession()->GetSecurity() == 0 && !handler->GetSession()->GetPlayer()->HasPatchs())
+        if (handler->GetSession()->GetSecurity() == 0 && !handler->GetSession()->HasPatch())
             return false;
         char* category = strtok((char*)args, " ");
         if (!category)
@@ -2779,7 +2779,7 @@ public:
         if (!player)
             return false;
 
-        player->SetHasPatchs();
+      /*  player->SetHasPatchs();*/
         player->RemoveAura(300612);       
         player->AddAura(300611, player);
         player->TeleportTo(player->GetWorldLocation());
@@ -2789,7 +2789,7 @@ public:
 
     static bool HandleSendVotePoints(ChatHandler* handler, char const* /* args*/)
     {
-        handler->GetSession()->GetPlayer()->SendUpdateWorldState(43541, handler->GetSession()->GetPlayer()->GetVotePoints());
+        handler->GetSession()->GetPlayer()->SendUpdateWorldState(43541, handler->GetSession()->GetVotePoints());
         handler->GetSession()->GetPlayer()->SendUpdateWorldState(43542, sWorld->getIntConfig(CONFIG_LOYALTY_SHOP_WORLDSTATE));
 
 

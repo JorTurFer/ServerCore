@@ -304,7 +304,7 @@ public:
         }
         else if (itemproto->ScriptType == 13) //Add LoyaltyPoints
         {
-            player->AddVotePoints(atoi(itemproto->ScriptIDs.c_str()), false);
+            player->GetSession()->AddVotePoints(atoi(itemproto->ScriptIDs.c_str()), false);
         }
         else if (itemproto->ScriptType == 14) //PromocionIndividual
         {
