@@ -440,6 +440,9 @@ Player::Player(WorldSession* session) : Unit(true)
 
     m_achievementMgr = new AchievementMgr(this);
     m_reputationMgr = new ReputationMgr(this);
+
+	//Cargo si tiene parches al construir el pj
+	_LoadPatch();
 }
 
 Player::~Player()
@@ -2099,7 +2102,6 @@ void Player::AddToWorld()
     for (uint8 i = PLAYER_SLOT_START; i < PLAYER_SLOT_END; ++i)
         if (m_items[i])
             m_items[i]->AddToWorld();
-
 
 }
 
@@ -27199,7 +27201,6 @@ void Player::RemoveSocial()
     m_social = nullptr;
 }
 
-
 void Player::_LoadVotePoints()
 {
     QueryResult result = LoginDatabase.PQuery("SELECT points,lastvote FROM voting_points WHERE id = %u", GetSession()->GetAccountId());
@@ -27216,6 +27217,15 @@ void Player::_LoadVotePoints()
     }
 }
 
+void Player::_LoadPatch()
+{
+	QueryResult result = LoginDatabase.PQuery("SELECT parches FROM account WHERE id = %u", GetSession()->GetAccountId());
+	if (result)
+	{
+		if (result->Fetch()[0].GetBool())
+			SetHasPatchs();
+	}	
+}
 
 void Player::AddVotePoints(uint32 points, bool registrar = true)
 {

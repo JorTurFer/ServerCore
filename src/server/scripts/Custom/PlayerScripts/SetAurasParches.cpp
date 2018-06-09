@@ -12,9 +12,17 @@ public:
 
     void OnLogin(Player* player, bool /*bFirstLogin*/)
     {
-        //Cambio las auras
-        player->RemoveAura(300611);
-        player->AddAura(300612, player);
+		//Cambio las auras
+		if (player->HasPatchs())
+		{
+			player->RemoveAura(300612);
+			player->AddAura(300611, player);
+		}
+		else
+		{
+			player->RemoveAura(300611);
+			player->AddAura(300612, player);
+		}
         //Hago el recall       
         player->TeleportTo(player->GetWorldLocation());
     }

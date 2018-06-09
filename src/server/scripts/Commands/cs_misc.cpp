@@ -117,7 +117,7 @@ public:
             { "mailbox",          rbac::RBAC_PERM_COMMAND_MAILBOX,          false, &HandleMailBoxCommand,          "" },
             { "gossiprequest",	  rbac::RBAC_PERM_COMMAND_GOSSIP_REQUEST,   false, &HandleGossipRequest,           "" },
             { "loyaltyshop",	  rbac::RBAC_PERM_COMMAND_GOSSIP_REQUEST,   false, &HandleLoyaltyShopRequest,      "" },
-            { "haspatchs",		  rbac::RBAC_PERM_COMMAND_HAS_PATCHS,	    false, &HandleSetHasPatch,             "" },
+            //{ "haspatchs",		  rbac::RBAC_PERM_COMMAND_HAS_PATCHS,	    false, &HandleSetHasPatch,             "" },
             { "updateloyaltypoints",rbac::RBAC_PERM_COMMAND_LOYALTY_UPDATE_POINTS, false, &HandleSendVotePoints,   "" },
 
 
@@ -2785,8 +2785,6 @@ public:
         player->TeleportTo(player->GetWorldLocation());
 
         return true;
-
-
     }
 
     static bool HandleSendVotePoints(ChatHandler* handler, char const* /* args*/)
