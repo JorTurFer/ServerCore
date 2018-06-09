@@ -1,0 +1,103 @@
+#include "Chat.h"
+#include "Player.h"
+#include "ScriptMgr.h"
+#include "World.h"
+#include "ScriptPCH.h"
+
+std::string wChat_Command    = "chat";
+std::string wChannel_Name    = "#Global";
+
+// Pila de colores
+std::string wBlizz = "|cffffc0c0";
+
+// OnLogin Mensaje
+class Player_WorldChat : public PlayerScript
+{
+public:
+    Player_WorldChat() : PlayerScript("Player_WorldChat") { }
+    void OnLogin(Player* player, bool /*firstLogin*/) override 
+    { ChatHandler(player->GetSession()).PSendSysMessage("Escribe .%s para usar el chat Global!", wChat_Command.c_str()); }        
+};
+
+// World Chat Script
+class WORLD_CHAT : public CommandScript
+{
+public:
+    WORLD_CHAT() : CommandScript("WORLD_CHAT") { }
+
+    std::vector<ChatCommand> GetCommands() const
+    {
+        static std::vector<ChatCommand> commandTable =
+        {
+            { wChat_Command.c_str(), rbac::RBAC_IN_GRANTED_LIST, true, &HandleWorldChatCommand, "Prefijo. `.chat hola mundo`" },
+        };
+        return commandTable;
+    }
+
+    static bool HandleWorldChatCommand(ChatHandler* handler, const char* msg)
+    {        
+        WorldSession* session = handler->GetSession();
+        Player* player = session->GetPlayer();
+        
+        // Sanitizar primero para prevenir crashes.
+        if (!session->GetPlayer()->CanSpeak())
+				return false;
+        
+		    std::string temp = msg;
+		    if (!msg || temp.find_first_not_of(' ') == std::string::npos)
+			  return false;
+
+        // Los jugadores requieren un nivel para usar el WorldChat, se puede comentar esta funcion.
+        if (player->getLevel() < sWorld->getIntConfig(CONFIG_CHAT_SAY_LEVEL_REQ))
+        { 
+            session->SendNotification("No puedes usar el comando .%s hasta que seas de nivel %i", wChat_Command.c_str(), sWorld->getIntConfig(CONFIG_CHAT_SAY_LEVEL_REQ));
+            return false;
+        }       
+        
+        // Declaraciones despues de checar el nivel del jugador.
+        std::string wChannelColor = wBlizz;
+        std::string GetName = player->GetName();
+        std::string name    = "|Hplayer:" + GetName + "|h" + GetName;
+        
+        std::string wTeamIcon,wClassColor,wClassTalkColor,wClassIcon, 
+                            wChat = "", 
+                            _UI = "|TInterface\\icons\\",
+                            wGM_Icon = "|TINTERFACE/CHATFRAME/UI-CHATICON-BLIZZ:13:22:0:-1|t",        
+                            _Open = wChannelColor+"[|r",
+                            _Close = wChannelColor+"]|r";
+           
+        switch(player->GetTeam())
+        {
+            case ALLIANCE: wTeamIcon = _UI + "INV_misc_tournaments_banner_human.png:13|t"; break;
+            case HORDE:    wTeamIcon = _UI + "INV_misc_tournaments_banner_orc.png:13|t"; break;
+        }
+            
+        switch(player->getClass())
+        {      
+            case CLASS_WARRIOR:       wClassColor = "|cffC79C6E", wClassTalkColor = "|cffF9CFA2", wClassIcon = _UI + "INV_Sword_27.png:13|t"; break;
+            case CLASS_PALADIN:       wClassColor = "|cffF58CBA", wClassTalkColor = "|cffF9A4CA", wClassIcon = _UI + "INV_Hammer_01.png:13|t"; break;
+            case CLASS_HUNTER:        wClassColor = "|cffABD473", wClassTalkColor = "|cffE1FCBD", wClassIcon = _UI + "INV_Weapon_Bow_07.png:13|t"; break;
+            case CLASS_ROGUE:         wClassColor = "|cffFFF569", wClassTalkColor = "|cffFCF7AB", wClassIcon = _UI + "INV_ThrowingKnife_04.png:13|t"; break;
+            case CLASS_PRIEST:        wClassColor = "|cffFFFFFF", wClassTalkColor = "|cffEAF5FC", wClassIcon = _UI + "INV_Staff_30.png:13|t"; break;
+            case CLASS_DEATH_KNIGHT:  wClassColor = "|cffC41F3B", wClassTalkColor = "|cffE0798A", wClassIcon = _UI + "Spell_Deathknight_ClassIcon.png:13|t"; break;
+            case CLASS_SHAMAN:        wClassColor = "|cff0070DE", wClassTalkColor = "|cff89C2F9", wClassIcon = _UI + "inv_jewelry_talisman_04.png:13|t"; break;
+            case CLASS_MAGE:          wClassColor = "|cff69CCF0", wClassTalkColor = "|cffC2EBF9", wClassIcon = _UI + "inv_staff_13:13|t"; break;
+            case CLASS_WARLOCK:       wClassColor = "|cff9482C9", wClassTalkColor = "|cffCCBFF2", wClassIcon = _UI + "Ability_creature_cursed_03.png:13|t"; break;
+            case CLASS_DRUID:         wClassColor = "|cffFF7D0A", wClassTalkColor = "|cffF9AF6D", wClassIcon = _UI + "ability_druid_challengingroar.png:13|t"; break;            
+        }  
+        
+        wChat = _Open + wChannelColor + wChannel_Name + _Close;     
+        wChat = wChat + _Open + wTeamIcon + _Close + _Open + wClassIcon + _Close; // Team and Class Icons
+        if (player->IsGameMaster()) {  wChat = wChat + wGM_Icon; } 
+        wChat = wChat + _Open + wClassColor + name + _Close + wClassTalkColor + ": " + msg; // Team and Class Colors
+
+        sWorld->SendGlobalText(wChat.c_str(), NULL);              
+        return true;
+    }
+};
+
+void AddSC_world_chat()
+{
+    new Player_WorldChat;
+    new WORLD_CHAT;
+}

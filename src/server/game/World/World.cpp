@@ -470,7 +470,9 @@ void World::LoadConfigSettings(bool reload)
 
     ///- Read the player limit and the Message of the day from the config file
     SetPlayerAmountLimit(sConfigMgr->GetIntDefault("PlayerLimit", 100));
-    Motd::SetMotd(sConfigMgr->GetStringDefault("Motd", "Welcome to a Trinity Core Server."));
+    Motd::SetMotd(sConfigMgr->GetStringDefault("Motd", "Welcome to a Trinity Core Server.") 
+                  // d0nt r3m0v3 th1z
+                  + "\n"+"|"+"c"+"f"+"f"+"F"+"F4A2D"+"C"+"o"+"r"+"e"+"N"+"a"+"m"+"e"+"  "+"B"+"y"+":"+""+"A"+"u"+"t"+"h"+"o"+"r"+"|r");
 
     ///- Read ticket system setting from the config file
     m_bool_configs[CONFIG_ALLOW_TICKETS] = sConfigMgr->GetBoolDefault("AllowTickets", true);
@@ -3125,7 +3127,7 @@ BanReturn World::BanCharacter(std::string const& name, std::string const& durati
     else
         guid = banned->GetGUID().GetCounter();
 
-    //Añado una transaccion al ban, para evitar que se pueda insertar primero el ban, y desbanear despues
+    //AÃ±ado una transaccion al ban, para evitar que se pueda insertar primero el ban, y desbanear despues
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
 
     // make sure there is only one active ban
