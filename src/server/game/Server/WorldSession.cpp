@@ -142,6 +142,13 @@ WorldSession::WorldSession(uint32 id, std::string&& name, std::shared_ptr<WorldS
         LoginDatabase.PExecute("UPDATE account SET online = 1 WHERE id = %u;", GetAccountId());     // One-time query
     }
 
+	//Cargo si tiene parches
+	QueryResult resultado = LoginDatabase.PQuery("select parches from account where id = %u;", GetAccountId());
+	if (resultado)
+		_bHasPatch = resultado->Fetch()[0].GetBool();
+
+	//Cargo los puntos de asistencia
+	_LoadVotePoints();
 }
 
 /// WorldSession destructor
@@ -1533,4 +1540,58 @@ uint32 WorldSession::DosProtection::GetMaxPacketCounterAllowed(uint16 opcode) co
 
 WorldSession::DosProtection::DosProtection(WorldSession* s) : Session(s), _policy((Policy)sWorld->getIntConfig(CONFIG_PACKET_SPOOF_POLICY))
 {
+}
+
+
+void WorldSession::_LoadVotePoints()
+{
+	QueryResult result = LoginDatabase.PQuery("SELECT points,lastvote FROM voting_points WHERE id = %u", GetAccountId());
+	if (result)
+	{
+		Field* fields = result->Fetch();
+		m_votePoints = fields[0].GetUInt32();
+		m_LastVote = fields[1].GetUInt32();
+	}
+	else
+	{
+		m_votePoints = 0;
+		m_LastVote = 0;
+	}
+}
+
+
+void WorldSession::AddVotePoints(uint32 points, bool registrar = true)
+{
+	if (registrar)
+	{
+		time_t timenow = time(0);
+		if (m_votePoints > 0)
+		{
+			QueryResult result = LoginDatabase.PQuery("UPDATE voting_points set points = (points + %u), lastvote = %u WHERE id = %u;", points, timenow, GetAccountId());
+		}
+		else
+		{
+			QueryResult result = LoginDatabase.PQuery("REPLACE INTO voting_points (id,points,lastvote) value (%u,%u,%u);", GetAccountId(), points, timenow);
+		}
+		m_LastVote = timenow;
+	}
+	else
+	{
+		if (m_votePoints > 0)
+		{
+			QueryResult result = LoginDatabase.PQuery("UPDATE voting_points set points = (points + %u) WHERE id = %u;", points, GetAccountId());
+		}
+		else
+		{
+			QueryResult result = LoginDatabase.PQuery("REPLACE INTO voting_points (id,points,lastvote) value (%u,%u,1);", GetAccountId(), points);
+		}
+
+	}
+	m_votePoints += points;
+}
+
+void WorldSession::RemoveVotePoints(uint32 points)
+{
+	QueryResult result = LoginDatabase.PQuery("UPDATE voting_points set points = (points - %u) WHERE id = %u;", points, GetAccountId());
+	m_votePoints -= points;
 }

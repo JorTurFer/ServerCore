@@ -301,6 +301,15 @@ class TC_GAME_API WorldSession
         QueryCallback LoadPermissionsAsync();
         void InvalidateRBACData(); // Used to force LoadPermissions at next HasPermission check
 
+        //Patch System
+		bool HasPatch() const { return _bHasPatch; }
+
+        //Assitant System
+        uint32 GetVotePoints() { return m_votePoints; }
+        time_t GetLastVote() { return m_LastVote; }
+        void AddVotePoints(uint32 points, bool registrar);
+        void RemoveVotePoints(uint32 points);
+
         AccountTypes GetSecurity() const { return _security; }
         uint32 GetAccountId() const { return _accountId; }
         Player* GetPlayer() const { return _player; }
@@ -982,6 +991,13 @@ class TC_GAME_API WorldSession
         QueryResultHolderFuture _charLoginCallback;
 
         QueryCallbackProcessor _queryProcessor;
+        //Patch Syste,
+        bool _bHasPatch;
+
+        //Assistant System
+        void _LoadVotePoints();
+        uint32 m_votePoints = 0;
+        time_t m_LastVote = time(0);
 
     friend class World;
     protected:
