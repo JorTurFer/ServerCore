@@ -14,7 +14,7 @@ public:
 			return;
         std::string _UI_FriendsFrame_A = "|TInterface/FriendsFrame/PlusManz-Alliance:20:20|t",
                     _UI_FriendsFrame_H = "|TInterface/FriendsFrame/PlusManz-Horde:20:20|t";
-                    
+
 		msg = (player->GetTeam() == HORDE) ? _UI_FriendsFrame_H + msg : _UI_FriendsFrame_A + msg;
 
     };
