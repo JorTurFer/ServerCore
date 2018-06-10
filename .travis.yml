@@ -24,9 +24,6 @@ addons:
       - libreadline6-dev
       - zlib1g-dev
       - libbz2-dev
-
-
-      
 before_install:
   - git config user.email "travis@build.bot" && git config user.name "Travis CI"
   - git tag -a -m "Travis build" init
